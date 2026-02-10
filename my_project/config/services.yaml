@@ -16,3 +16,11 @@ services:
     App\Controller\:
         resource: '../src/Controller/'
         tags: ['controller.service_arguments']
+
+    # Configuración del ValuationService con sus reglas
+    App\Service\ValuationService:
+        arguments:
+            $pricingRules:
+                - '@App\Service\PricingRule\ConditionPricingRule'
+                - '@App\Service\PricingRule\BrandPricingRule'
+                - '@App\Service\PricingRule\SeasonalPricingRule'

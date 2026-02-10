@@ -6,21 +6,23 @@ use App\Enum\ProductCondition;
 
 /**
  * Regla: Ajuste de precio según el estado del producto
- * 
+ *
  * Ejemplo: Si el estado es "nuevo", multiplica por 1.5
  */
 class ConditionPricingRule implements PricingRuleInterface
 {
     public function apply(float $currentPrice, string $brand, string $category, ProductCondition $condition): float
     {
-        // TODO: Implementar lógica de ajuste por condición
-        // 
-        // Ejemplos:
-        // - Si condition es "new" -> x1.5
-        // - Si condition es "good" -> x1.0
-        // - Si condition es "fair" -> x0.7
-        
-        return $currentPrice;
+        // Multiplicadores según el estado del producto
+        $conditionMultipliers = [
+            ProductCondition::NEW => 1.5,   // Nuevo: +50%
+            ProductCondition::GOOD => 1.0,  // Bueno: sin cambio
+            ProductCondition::FAIR => 0.7,  // Aceptable: -30%
+        ];
+
+        $multiplier = $conditionMultipliers[$condition->getValue()] ?? 1.0;
+
+        return $currentPrice * $multiplier;
     }
 
     public function getDescription(): string

@@ -15,10 +15,12 @@ class ValuationService
 {
     private $pricingRules = [];
 
-    public function __construct()
+    /**
+     * @param iterable $pricingRules Array de reglas de pricing que implementan PricingRuleInterface
+     */
+    public function __construct(iterable $pricingRules)
     {
-        // TODO: Inyectar las reglas de pricing mediante Dependency Injection
-        // $this->pricingRules = $pricingRules;
+        $this->pricingRules = $pricingRules;
     }
 
     /**
@@ -35,12 +37,11 @@ class ValuationService
         $basePrice = $this->getBasePrice($category);
 
         // 2. Aplicar reglas de negocio dinámicas (Strategy Pattern)
-        // TODO: Iterar sobre $this->pricingRules y aplicar cada una
-        // foreach ($this->pricingRules as $rule) {
-        //     $basePrice = $rule->apply($basePrice, $brand, $category, $condition);
-        // }
+        foreach ($this->pricingRules as $rule) {
+            $basePrice = $rule->apply($basePrice, $brand, $category, $condition);
+        }
 
-        return $basePrice;
+        return round($basePrice, 2);
     }
 
     /**
